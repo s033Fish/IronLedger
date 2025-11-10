@@ -1,0 +1,30 @@
+{
+    "indexes": [
+      {
+        "collectionGroup": "sets",
+        "queryScope": "COLLECTION_GROUP",
+        "fields": [
+          { "fieldPath": "dateISO", "order": "ASCENDING" },
+          { "fieldPath": "ts", "order": "DESCENDING" }
+        ]
+      },
+      {
+        "collectionGroup": "sets",
+        "queryScope": "COLLECTION_GROUP",
+        "fields": [
+          { "fieldPath": "exercise", "order": "ASCENDING" },
+          { "fieldPath": "ts", "order": "ASCENDING" }
+        ]
+      },
+      {
+        "collectionGroup": "sets",
+        "queryScope": "COLLECTION_GROUP",
+        "fields": [
+          { "fieldPath": "exercise", "order": "ASCENDING" },
+          { "fieldPath": "dateISO", "order": "DESCENDING" }
+        ]
+      }
+    ],
+    "fieldOverrides": []
+  }
+  

@@ -1,5 +1,5 @@
 // src/services/firebase.ts
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, initializeFirestore } from "firebase/firestore";
 
@@ -13,13 +13,13 @@ function showAlert(label: string, message: string) {
 }
 
 // Build config from EXPO_PUBLIC_ env (all strings, correct)
-const cfg = {
-  apiKey: "AIzaSyByN4BK3Ji5bby9L5OFIi6VsIig6Gx_YVo",
-  authDomain: "ironledger-44f34.firebaseapp.com",
-  projectId: "ironledger-44f34",
-  storageBucket: "ironledger-44f34.firebasestorage.app",
-  messagingSenderId: "806494115439",
-  appId: "1:806494115439:web:6899af473b36cd0fa29f9a"
+const cfg: FirebaseOptions = {
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID!,
 };
 
 // Surface what the production build is actually using

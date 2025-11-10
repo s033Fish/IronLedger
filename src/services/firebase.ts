@@ -1,7 +1,7 @@
 // src/services/firebase.ts
 import { FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, initializeFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore, memoryLocalCache } from "firebase/firestore"; // MTF added memoryLocalCache
 
 const TAG = "[firebase.ts]";
 
@@ -68,14 +68,20 @@ try {
   if (!(global as any).__FIRESTORE_INIT__) {
     showAlert(
       `${TAG}[Firestore]`,
-      "Initializing Firestore with experimentalForceLongPolling=true, useFetchStreams=false"
+     // "Initializing Firestore with experimentalForceLongPolling=true, useFetchStreams=false"
+       "Initializing Firestore with memoryLocalCache and auto transport detection"
     );
     dbInternal = initializeFirestore(app, {
-      experimentalForceLongPolling: true,
-      useFetchStreams: false,
+      // MTF commented lines 76 & 77 out...added line 78
+      // experimentalForceLongPolling: true, 
+      // useFetchStreams: false,
+      localCache: memoryLocalCache(),
     } as any);
     (global as any).__FIRESTORE_INIT__ = true;
-    showAlert(`${TAG}[Firestore]`, "Firestore initialized (forced long polling).");
+    // MTF commented out line 82 added 83
+    // showAlert(`${TAG}[Firestore]`, "Firestore initialized (forced long polling).");
+    showAlert(`${TAG}[Firestore]`, "Firestore initialized (memory cache).");
+
   } else {
     showAlert(
       `${TAG}[Firestore]`,

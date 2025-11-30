@@ -12,7 +12,7 @@ export default function CoachScreen() {
 
       <View style={{ alignItems: "center", justifyContent: "center", marginTop: 32 }}>
         <Text style={[type.h2, { color: colors.muted, textAlign: "center", marginBottom: 12 }]}>
-          🏗️ To Be Implemented
+          🏗️ Coming Soon
         </Text>
         <Card style={{ maxWidth: 480 }}>
           <Body style={{ textAlign: "center", color: colors.muted }}>

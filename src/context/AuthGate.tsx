@@ -1,21 +1,7 @@
-// src/context/AuthGate.tsx (Light Theme)
 import React, { useEffect, useMemo, useState } from "react";
-import {
-    ActivityIndicator,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StatusBar,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
 import { emailSignIn, emailSignUp, listenAuth, resetPassword } from "../services/auth";
 import { mapAuthError } from "../services/authErrors";
-import { colors } from "../theme/colors";
-import { type } from "../theme/typography";
+import { Eye, EyeOff } from "lucide-react";
 
 type Mode = "signin" | "signup";
 
@@ -28,33 +14,41 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [showResetHint, setShowResetHint] = useState(false);
-  const [focused, setFocused] = useState<"email" | "pw" | null>(null);
-
-  // Light palette
-  const BG = "#F7F8FA";
-  const CARD_BG = "#FFFFFF";
-  const BORDER = "#E5E7EB";
-  const BORDER_FOCUS = "#5A6FFF"; // subtle blue focus
-  const TEXT = "#15171A";
-  const SUBTEXT = "#5B6068";
-  const PLACEHOLDER = "#9096A0";
-  const ERROR_BG = "#FFF1F2"; // soft red
-  const ERROR_BORDER = colors.crimson; // from your theme
-  const ACCENT = colors.crimson;
 
   useEffect(() => listenAuth(setUser), []);
-  const onEmailChange = (v: string) => { setEmail(v); if (err) setErr(""); setShowResetHint(false); };
-  const onPwChange = (v: string) => { setPw(v); if (err) setErr(""); setShowResetHint(false); };
-  useEffect(() => { setErr(""); setShowResetHint(false); }, [mode]);
+  
+  const onEmailChange = (v: string) => { 
+    setEmail(v); 
+    if (err) setErr(""); 
+    setShowResetHint(false); 
+  };
+  
+  const onPwChange = (v: string) => { 
+    setPw(v); 
+    if (err) setErr(""); 
+    setShowResetHint(false); 
+  };
+  
+  useEffect(() => { 
+    setErr(""); 
+    setShowResetHint(false); 
+  }, [mode]);
 
   const validEmail = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()), [email]);
   const inputsValid = mode === "signup" ? (validEmail && pw.length >= 6) : (validEmail && pw.length > 0);
   const disabled = loading || !inputsValid;
 
   async function handleSubmit() {
-    setErr(""); setShowResetHint(false);
-    if (!validEmail) { setErr("Enter a valid email like name@domain.com."); return; }
-    if (mode === "signup" && pw.length < 6) { setErr("Password must be at least 6 characters."); return; }
+    setErr(""); 
+    setShowResetHint(false);
+    if (!validEmail) { 
+      setErr("Enter a valid email like name@domain.com."); 
+      return; 
+    }
+    if (mode === "signup" && pw.length < 6) { 
+      setErr("Password must be at least 6 characters."); 
+      return; 
+    }
     setLoading(true);
     try {
       const e = email.trim();
@@ -66,7 +60,10 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
       setErr(msg);
       if (code === "auth/wrong-password") setShowResetHint(true);
       if (code === "auth/user-not-found") setMode("signup");
-      if (code === "auth/email-already-in-use") { setMode("signin"); setShowResetHint(true); }
+      if (code === "auth/email-already-in-use") { 
+        setMode("signin"); 
+        setShowResetHint(true); 
+      }
     } finally {
       setLoading(false);
     }
@@ -74,7 +71,10 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   async function handleReset() {
     setErr("");
-    if (!validEmail) { setErr("Enter your email above, then tap Reset."); return; }
+    if (!validEmail) { 
+      setErr("Enter your email above, then tap Reset."); 
+      return; 
+    }
     setLoading(true);
     try {
       await resetPassword(email.trim());
@@ -92,226 +92,135 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
   if (user) return <>{children}</>;
 
   return (
-    <View style={{ flex: 1, backgroundColor: BG }}>
-      <StatusBar barStyle="dark-content" />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.select({ ios: "padding", android: undefined })}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 24 : 0}
-      >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
-          {/* Header / Branding */}
-          <View style={{ paddingTop: 64, paddingHorizontal: 20, alignItems: "center" }}>
-            <Image
-              source={require("../../assets/images/logo.png")}
-              style={{ width: 140, height: undefined, aspectRatio: 1 }}
-              resizeMode="contain"
-              accessible
-              accessibilityLabel="Iron Ledger logo"
-            />
-            <Text style={[type.body, { color: SUBTEXT, marginTop: 4 }]}>
-              Track your grind. Level up.
-            </Text>
-          </View>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <h1 className="font-bebas text-5xl text-crimson tracking-wider mb-2">
+              IRON LEDGER
+            </h1>
+            <p className="text-gray-600">Track. Level Up. Get Strong.</p>
+          </div>
 
-          {/* Auth Card */}
-          <View
-            style={{
-              marginTop: 28,
-              marginHorizontal: 16,
-              padding: 16,
-              backgroundColor: CARD_BG,
-              borderRadius: 14,
-              borderWidth: 1,
-              borderColor: BORDER,
-              shadowColor: "#000",
-              shadowOpacity: 0.06,
-              shadowRadius: 12,
-              shadowOffset: { width: 0, height: 6 },
-              elevation: 2,
-            }}
-          >
-            {/* Mode toggle (light pill) */}
-            <View
-              style={{
-                backgroundColor: "#F3F4F6",
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: BORDER,
-                padding: 4,
-                flexDirection: "row",
-                marginBottom: 14,
-              }}
+          {/* Mode Toggle */}
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={() => setMode("signin")}
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors ${
+                mode === "signin"
+                  ? "bg-crimson text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
             >
-              {(["signin","signup"] as Mode[]).map((m) => {
-                const active = mode === m;
-                return (
-                  <Pressable
-                    key={m}
-                    onPress={() => setMode(m)}
-                    style={{
-                      flex: 1,
-                      paddingVertical: 10,
-                      alignItems: "center",
-                      borderRadius: 8,
-                      backgroundColor: active ? "#FFFFFF" : "transparent",
-                      borderWidth: active ? 1 : 0,
-                      borderColor: active ? BORDER : "transparent",
-                    }}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
-                  >
-                    <Text style={[type.bodyBold, { color: active ? TEXT : SUBTEXT }]}>
-                      {m === "signin" ? "Sign in" : "Create"}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+              Sign In
+            </button>
+            <button
+              onClick={() => setMode("signup")}
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors ${
+                mode === "signup"
+                  ? "bg-crimson text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Create Account
+            </button>
+          </div>
 
-            {/* Email */}
-            <Text style={[type.caption, { color: SUBTEXT, marginBottom: 6 }]}>Email</Text>
-            <TextInput
-              placeholder="name@domain.com"
-              placeholderTextColor={PLACEHOLDER}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              autoComplete="email"
-              textContentType="emailAddress"
+          {/* Email */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
               value={email}
-              onChangeText={onEmailChange}
-              onFocus={() => setFocused("email")}
-              onBlur={() => setFocused(null)}
-              returnKeyType="next"
-              style={{
-                borderWidth: 1,
-                borderColor: err && !validEmail ? ERROR_BORDER : (focused === "email" ? BORDER_FOCUS : BORDER),
-                backgroundColor: "#FFFFFF",
-                color: TEXT,
-                paddingVertical: 12,
-                paddingHorizontal: 12,
-                borderRadius: 10,
-                marginBottom: 12,
-              }}
+              onChange={(e) => onEmailChange(e.target.value)}
+              placeholder="name@domain.com"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crimson focus:border-transparent outline-none transition-all"
             />
+          </div>
 
-            {/* Password */}
-            <Text style={[type.caption, { color: SUBTEXT, marginBottom: 6 }]}>Password</Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                borderWidth: 1,
-                borderColor: err && pw.length === 0 ? ERROR_BORDER : (focused === "pw" ? BORDER_FOCUS : BORDER),
-                backgroundColor: "#FFFFFF",
-                borderRadius: 10,
-                paddingHorizontal: 12,
-              }}
-            >
-              <TextInput
-                placeholder={mode === "signup" ? "At least 6 characters" : "Your password"}
-                placeholderTextColor={PLACEHOLDER}
-                secureTextEntry={!pwVisible}
+          {/* Password */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={pwVisible ? "text" : "password"}
                 value={pw}
-                onChangeText={onPwChange}
-                onFocus={() => setFocused("pw")}
-                onBlur={() => setFocused(null)}
-                textContentType="password"
-                autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                style={{ flex: 1, color: TEXT, paddingVertical: 12 }}
-                returnKeyType="go"
-                onSubmitEditing={() => { if (!disabled) handleSubmit(); }}
+                onChange={(e) => onPwChange(e.target.value)}
+                placeholder={mode === "signup" ? "At least 6 characters" : "Enter your password"}
+                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crimson focus:border-transparent outline-none transition-all"
               />
-              <Pressable onPress={() => setPwVisible(v => !v)} accessibilityRole="button">
-                <Text style={[type.bodyBold, { color: SUBTEXT, paddingVertical: 10 }]}>
-                  {pwVisible ? "Hide" : "Show"}
-                </Text>
-              </Pressable>
-            </View>
-
-            {mode === "signup" && (
-              <Text style={[type.caption, { color: SUBTEXT, marginTop: 6 }]}>
-                Use a strong password you don’t use elsewhere.
-              </Text>
-            )}
-
-            {/* Submit */}
-            <Pressable
-              disabled={disabled}
-              onPress={handleSubmit}
-              style={{
-                marginTop: 16,
-                opacity: disabled ? 0.6 : 1,
-                paddingVertical: 14,
-                backgroundColor: ACCENT,
-                borderRadius: 10,
-                alignItems: "center",
-              }}
-              accessibilityRole="button"
-            >
-              {loading
-                ? <ActivityIndicator color="#fff" />
-                : <Text style={{ color: "#fff", fontWeight: "800" }}>
-                    {mode === "signin" ? "Sign In" : "Create Account"}
-                  </Text>}
-            </Pressable>
-
-            {/* Row actions */}
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 12 }}>
-              <Pressable onPress={() => setMode(mode === "signin" ? "signup" : "signin")}>
-                <Text style={[type.body, { color: "#374151" }]}>
-                  {mode === "signin" ? "New here? Create account" : "Have an account? Sign in"}
-                </Text>
-              </Pressable>
-
-              {showResetHint && (
-                <Pressable onPress={handleReset}>
-                  <Text style={[type.bodyBold, { color: ACCENT }]}>Reset password</Text>
-                </Pressable>
-              )}
-            </View>
-
-            {/* Error / info banner */}
-            {!!err && (
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: ERROR_BORDER,
-                  backgroundColor: ERROR_BG,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginTop: 12,
-                }}
+              <button
+                type="button"
+                onClick={() => setPwVisible(!pwVisible)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                <Text style={[type.body, { color: "#7F1D1D" }]}>{err}</Text>
-                {err.includes("Sign in instead") && (
-                  <Text style={[type.caption, { color: "#7F1D1D", marginTop: 6 }]}>
-                    Tip: Use your password to sign in. If you forgot it, tap “Reset password”.
-                  </Text>
-                )}
-                {err.includes("Create an account first") && (
-                  <Text style={[type.caption, { color: "#7F1D1D", marginTop: 6 }]}>
-                    Tip: Switch to “Create account” above and try again.
-                  </Text>
-                )}
-                {err.toLowerCase().includes("network") && (
-                  <Text style={[type.caption, { color: "#7F1D1D", marginTop: 6 }]}>
-                    Tip: Check Wi-Fi/cellular and try again.
-                  </Text>
-                )}
-              </View>
+                {pwVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            {mode === "signup" && (
+              <p className="text-xs text-gray-500 mt-2">
+                Use a strong password you don't use elsewhere.
+              </p>
             )}
-          </View>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleSubmit}
+            disabled={disabled}
+            className={`w-full py-3 px-4 rounded-lg font-bold uppercase tracking-wider transition-colors ${
+              disabled
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-crimson text-white hover:bg-crimson/90"
+            }`}
+          >
+            {loading ? "Loading..." : mode === "signin" ? "Sign In" : "Create Account"}
+          </button>
+
+          {/* Reset Password */}
+          {showResetHint && (
+            <button
+              onClick={handleReset}
+              disabled={loading}
+              className="w-full mt-3 text-sm text-crimson hover:underline font-medium"
+            >
+              Forgot password? Reset it
+            </button>
+          )}
+
+          {/* Error Message */}
+          {err && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800 text-sm">{err}</p>
+              {err.includes("Sign in instead") && (
+                <p className="text-red-700 text-xs mt-2">
+                  Tip: Use your password to sign in. If you forgot it, tap "Reset password".
+                </p>
+              )}
+              {err.includes("Create an account first") && (
+                <p className="text-red-700 text-xs mt-2">
+                  Tip: Switch to "Create account" above and try again.
+                </p>
+              )}
+              {err.toLowerCase().includes("network") && (
+                <p className="text-red-700 text-xs mt-2">
+                  Tip: Check Wi-Fi/cellular and try again.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Footer */}
-          <View style={{ alignItems: "center", paddingVertical: 24 }}>
-            <Text style={[type.caption, { color: SUBTEXT }]}>
-              By continuing you agree to the Terms & Privacy.
-            </Text>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+          <p className="text-center text-xs text-gray-500 mt-6">
+            By continuing you agree to the Terms & Privacy.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };

@@ -23,6 +23,7 @@
     "expo-status-bar": "~3.0.8",
     "expo-web-browser": "~15.0.8",
     "firebase": "^12.5.0",
+    "lucide-react": "^0.555.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
@@ -33,6 +34,8 @@
     "react-native-svg": "15.12.1",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.5.1",
+    "react-router-dom": "^7.9.6",
+    "recharts": "^3.5.1",
     "victory-native": "^41.20.1"
   },
   "devDependencies": {

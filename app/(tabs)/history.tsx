@@ -350,8 +350,7 @@ export default function HistoryScreen() {
   );
 
   return (
-    // FlatList controls scrolling for the whole page
-    <Screen scroll={false}>
+    <Screen>
       <FlatList
         refreshing={refreshing}
         onRefresh={onRefresh}

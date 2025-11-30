@@ -103,8 +103,8 @@ function showAlert(label: string, message: string) {
           const data: any = delSnap.data() || {};
           const names = Array.isArray(data.names) ? data.names : [];
           deleted = names
-            .map((n) => (typeof n === "string" ? n : ""))
-            .filter((n) => !!n);
+            .map((n: any) => (typeof n === "string" ? n : ""))
+            .filter((n: any) => !!n);
           showAlert(
             TAG_LIST,
             `Deleted defaults doc exists. Deleted count=${deleted.length}`

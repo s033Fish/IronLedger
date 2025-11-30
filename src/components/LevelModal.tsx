@@ -16,12 +16,11 @@ export const LevelModal: React.FC<{
   // Normalize just for display (label + PR highlight)
   const rows = useMemo(() => {
     return (events ?? []).map((e) => {
-      const amount = Number((e as any).amount) || 0;
+      const amount = e.amount || 0;
       const exercise = (e as any).exercise ?? null;
-      const type = (e as any).type ?? null;           // may be "PR"
-      const reason = (e as any).reason ?? "";         // e.g., "Set logged" or "New PR!"
-      const isPR =
-        type === "PR" || reason.toLowerCase().includes("pr");
+      const type = e.type ?? "SET";
+      const note = e.note ?? "";
+      const isPR = type === "PR" || note.toLowerCase().includes("pr");
 
       return {
         id: e.id,

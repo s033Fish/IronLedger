@@ -18,6 +18,7 @@ import { epley1RM } from "../../src/utils/epley";
 // ---- Firestore API ----
 import { FlatList } from "react-native"; // optional: RN or RNGH both OK
 import { SetRecord } from "../../src/lib/lift";
+import { XPEvent } from "../../src/types";
 import {
     addSetFS,
     addXP,
@@ -28,17 +29,12 @@ import {
     listTodaySets
 } from "../../src/services/api";
 
-type XPEvent = {
-    id: string;
-    amount: number;
-    reason: string;
-    exercise?: string | null;
-    // normalized fields:
-    dateISO?: string;       // ISO string for display
+type XPEventWithDates = XPEvent & {
+    // normalized fields for display:
     createdAtMs?: number;   // optional millis if your UI sorts
 };
 
-function normalizeXP(raw: any[]): XPEvent[] {
+function normalizeXP(raw: any[]): XPEventWithDates[] {
     return raw.map((e) => {
         // Try common timestamp fields:
         const src = e?.dateISO ?? e?.createdAt ?? e?.ts ?? e?.date ?? null;
@@ -59,7 +55,19 @@ function normalizeXP(raw: any[]): XPEvent[] {
 
         const createdAtMs = dateISO ? new Date(dateISO).getTime() : undefined;
 
-        return { ...e, dateISO, createdAtMs };
+        // Ensure the required 'type' field exists, defaulting to "SET" if missing
+        const type = e?.type ?? "SET";
+        const amount = Number(e?.amount) || 0;
+        const note = e?.note ?? e?.reason;
+
+        return { 
+            id: e.id,
+            dateISO: dateISO || e?.dateISO || new Date().toISOString(),
+            type,
+            amount,
+            note,
+            createdAtMs 
+        };
     });
 }
 
@@ -80,7 +88,7 @@ export default function LogScreen() {
     const [query, setQuery] = useState("");
 
     // XP summary
-    const [recentXP, setRecentXP] = useState<XPEvent[]>([]);
+    const [recentXP, setRecentXP] = useState<XPEventWithDates[]>([]);
     const xpTotal = useMemo(
         () => recentXP.reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
         [recentXP]
@@ -339,8 +347,7 @@ export default function LogScreen() {
     );
 
     return (
-        // Disable Screen's internal ScrollView because we are using FlatList to scroll the whole page
-        <Screen scroll={false}>
+        <Screen>
             <FlatList
                 data={todaySets}
                 keyExtractor={(i) => i.id}

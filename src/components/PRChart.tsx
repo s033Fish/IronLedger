@@ -72,7 +72,7 @@ const PRChart: React.FC<{ data: ChartPoint[] }> = ({ data }) => {
             <Line x1={P.left} y1={P.top} x2={P.left} y2={H - P.bottom} stroke={colors.charcoal} strokeWidth={1} />
 
             {/* X tick labels */}
-            {ticks?.xTicks.map((t, i) => (
+            {ticks?.xTicks.map((t: any, i: number) => (
               <SvgText
                 key={`xt-${i}`}
                 x={t.x}
@@ -86,7 +86,7 @@ const PRChart: React.FC<{ data: ChartPoint[] }> = ({ data }) => {
             ))}
 
             {/* Y tick labels + grid lines */}
-            {ticks?.yTicks.map((t, i) => (
+            {ticks?.yTicks.map((t: any, i: number) => (
               <G key={`yt-${i}`}>
                 <Line x1={P.left} y1={t.y} x2={w - P.right} y2={t.y} stroke="#e6e6e6" strokeWidth={1} />
                 <SvgText

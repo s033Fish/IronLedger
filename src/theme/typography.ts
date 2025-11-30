@@ -18,4 +18,5 @@ export const type = {
     body: { fontFamily: "Inter", fontSize: 16, lineHeight: 22 } as TextStyle,
     bodyBold: { fontFamily: "InterBold", fontSize: 16, lineHeight: 22, fontWeight: 700 } as TextStyle,
     mono: { fontFamily: "Inter", fontSize: 14, letterSpacing: 0.5 } as TextStyle,
+    caption: { fontFamily: "Inter", fontSize: 12, lineHeight: 16 } as TextStyle,
 };

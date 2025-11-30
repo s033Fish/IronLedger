@@ -369,7 +369,7 @@ export default function ExercisesScreen() {
   }
 
   return (
-    <Screen scroll={false}>
+    <Screen>
       {/* Option B: wrap just this screen’s list in GestureHandlerRootView */}
       <GestureHandlerRootView style={{ flex: 1 }}>
         <DraggableFlatList

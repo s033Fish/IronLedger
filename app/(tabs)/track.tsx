@@ -400,7 +400,7 @@ function BodyweightView({ top }: { top: React.ReactNode }) {
     );
 
     return (
-        <Screen scroll={false}>
+        <Screen>
             <FlatList
                 data={listData}
                 keyExtractor={(i) => i.id}
@@ -663,7 +663,7 @@ function CreatineView({ top }: { top: React.ReactNode }) {
 
     // Use a FlatList with only a header so the page still scrolls
     return (
-        <Screen scroll={false}>
+        <Screen>
             <FlatList
                 data={[]}
                 keyExtractor={(_, idx) => String(idx)}
